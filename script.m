@@ -7,6 +7,8 @@ load('vehicle_parameters.mat')
 velstart = 0;
 wheel_radius = 359; % mm
 
+g = 9.81; % m/s^2 
+
 rho = 1.204; % air density [kg/m3] at 20°C
 %%
 
