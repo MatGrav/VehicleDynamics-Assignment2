@@ -5,8 +5,8 @@ peak_power = 150*10^3; % Watt
 max_torque = 310; % Nm
 max_speed = 16000; % rpm
 gear_ratio = 10.5;
-powertrain_pure_time_delay = 20; %ms
-torque_time_constant = 50; %ms
+powertrain_pure_time_delay = 0.020; % s
+torque_time_constant = 0.050; % s
 
 e_motor_inverter_efficiency = 0.90;
 transmission_efficiency = 0.95;
@@ -25,8 +25,8 @@ f2 = 6.5 * 10^-6; % s^2 / m^2
 L_rel = 0.285; % Tyre relax. length (range between 0.12m and 0.45)
 
 %% Friction brakes
-brakes_generation_deadtime = 20; %ms
-brakes_friction_rise_time = 25; %ms
+brakes_generation_deadtime = 0.020; % s
+brakes_friction_rise_time = 0.025; % s
 brakes_torque_distribution = 3.0; % 75:25
 
 %% Weight and aero
