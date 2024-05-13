@@ -1,12 +1,12 @@
 clear all; clc; clear;
 
 %% Powertrain
-e_machine_peak_power = 150*10^3; % Watt
-e_machine_max_torque = 310; % Nm
-e_machine_max_speed = 16000; % rpm
+peak_power = 150*10^3; % Watt
+max_torque = 310; % Nm
+max_speed = 16000; % rpm
 gear_ratio = 10.5;
-e_powertrain_pure_time_delay = 20; %ms
-e_machine_torque_time_constant = 50; %ms
+powertrain_pure_time_delay = 20; %ms
+torque_time_constant = 50; %ms
 
 e_motor_inverter_efficiency = 0.90;
 transmission_efficiency = 0.95;

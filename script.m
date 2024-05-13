@@ -5,7 +5,7 @@ run('Pacejka for Homework\Load_Tyre_Data.m')
 load('vehicle_parameters.mat')
 
 velstart = 0;
-wheel_radius = 359; % mm
+wheel_radius = 0.359; % m
 
 g = 9.81; % m/s^2 
 
