@@ -34,7 +34,10 @@ kerb_weight = 1812; % kg
 wheelbase = 2.77; % m
 CoG_height = 0.55; % m
 
-FtoR_mass_distribution = 1; % 50:50
+% 50:50 mass distribution
+F_mass_ratio = 0.5;
+R_mass_ratio = 1 - F_mass_ratio;
+
 S = 2.36; % m^2 % cross section / frontal area
 Cx = 0.27; % aerodinamic drag coefficient
 
