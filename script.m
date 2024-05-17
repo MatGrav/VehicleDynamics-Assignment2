@@ -16,12 +16,20 @@ rho = 1.204; % air density [kg/m3] at 20°C
 
 inclination = 0;
 
-mu_slope = 0;
-mu0 = 1;
+
 
 %s0 = -1;
 %s_slope = 0.2;
 
 
 Tsim = 100;
+
+%%
 open("model.slx");
+
+%% Longitudinal acceleration test in high-tyre road friction conditions
+velstart = 0;
+mu_slope = 0;
+mu0 = 1;
+
+target = 100/3.6;
