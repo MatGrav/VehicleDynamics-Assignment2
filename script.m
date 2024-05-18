@@ -87,4 +87,14 @@ for i = 1:length(init_speeds)
     fprintf('Rolling res loss of %.2f [Wh].\n\n', s.P_rr(end));
         
 end   
+%% max speed test?
+velstart = 0;
+%Tsim = 10000;
+%target = 500;
 
+Tsim = 300;
+target = 300;
+s = sim("model.slx");
+
+
+fprintf('Max speed: %.2f [Km/h].\n\n', 3.6*max(s.v_x(:)));
