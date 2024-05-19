@@ -29,7 +29,7 @@ Tsim = 200;
 
 %% Longitudinal acceleration test in high-tyre road friction conditions
 velstart = 0;
-mu_slope = 0;
+%mu_slope = 0;
 mu0 = 1;
 
 % target = 200/3.6;
@@ -72,8 +72,8 @@ mu0 = 1;
 % end   
 
 %
-init_speeds = [0 0 40 80];
-final_speeds = [50 100 70 120];
+init_speeds = [0 0 40 80 0];
+final_speeds = [50 100 70 120 140];
 
 for i = 1:length(init_speeds)
 
@@ -84,10 +84,11 @@ for i = 1:length(init_speeds)
     
     fprintf('Time to reach %.2f from %.2f is %f seconds.\n', 3.6*target, 3.6*velstart, s.tout(end));
     %plot(s.tout(:),3.6*s.v_x(:))
-    fprintf('Rolling res loss of %.2f [Wh].\n\n', s.P_rr(end));
-        
+    fprintf('Rolling res loss of %.2f [Wh].\n', s.P_rr(end));
+    fprintf('Aero drag loss of %.2f [Wh].\n\n', s.P_aero(end)); % Wrong?
+    
 end   
-%% max speed test?
+%% max speed test??
 velstart = 0;
 %Tsim = 10000;
 %target = 500;
