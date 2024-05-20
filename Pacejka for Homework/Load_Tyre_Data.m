@@ -1,5 +1,4 @@
 %% TAV module
-close all; clc; clear; 
 warning off
 
 % Load tyre data (Pacejka model coefficients)

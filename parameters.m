@@ -1,5 +1,3 @@
-clear all; clc; clear;
-
 %% Powertrain
 peak_power = 150*10^3; % Watt
 max_torque = 310; % Nm
