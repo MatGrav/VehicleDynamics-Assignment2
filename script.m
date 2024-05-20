@@ -43,11 +43,11 @@ for i = 1:length(init_speeds)
     
     fprintf('Time to reach %.2f from %.2f is %f seconds.\n', 3.6*target, 3.6*velstart, tout(end));
     %plot(tout(:),3.6*v_x(:))
-    fprintf('Rolling res loss of %.2f [Wh].\n', P_rr(end));
-    fprintf('Aero drag loss of %.2f [Wh].\n', P_aero(end));
-    fprintf('Electric powertrain loss of %.2f [Wh].\n', P_powertrain_loss(end));
-    fprintf('Transmission loss of %.2f [Wh].\n', P_transmission_loss(end));
-    fprintf('Longitudinal tyre slip loss of %.2f [Wh].\n\n', P_x(end));
+    fprintf('Rolling res loss of %.2f [Wh].\n', E_rolling_res_Wh(end));
+    fprintf('Aero drag loss of %.2f [Wh].\n', E_aero_drag_Wh(end));
+    fprintf('Electric powertrain loss of %.2f [Wh].\n', E_powertrain_loss_Wh(end));
+    fprintf('Transmission loss of %.2f [Wh].\n', E_transmission_loss_Wh(end));
+    fprintf('Longitudinal tyre slip loss of %.2f [Wh].\n\n', E_long_slip_loss_Wh(end));
 
     
     %% Graph
