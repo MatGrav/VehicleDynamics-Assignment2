@@ -44,20 +44,25 @@ for i = 1:length(init_speeds)
     fprintf('Time to reach %.2f from %.2f is %f seconds.\n', 3.6*target, 3.6*velstart, tout(end));
     %plot(tout(:),3.6*v_x(:))
     fprintf('Rolling res loss of %.2f [Wh].\n', P_rr(end));
-    fprintf('Aero drag loss of %.2f [Wh].\n\n', P_aero(end)); % Wrong?
-    
-    name_fig = sprintf('[%.2f - %.2f]', 3.6*velstart, 3.6*target);
-    fig = figure('Name',name_fig);
-    hold on, grid on
-    set(gca,'FontName','Times New Roman','FontSize',12)
-    xlabel('t');
-    plot(tout, a_x)
-    plot(tout, v_x)
-    legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
+    fprintf('Aero drag loss of %.2f [Wh].\n', P_aero(end));
+    fprintf('Electric powertrain loss of %.2f [Wh].\n', P_powertrain_loss(end));
+    fprintf('Transmission loss of %.2f [Wh].\n', P_transmission_loss(end));
+    fprintf('Longitudinal tyre slip loss of %.2f [Wh].\n\n', P_x(end));
 
-    output_dir = "Results";
-    filename = sprintf('%s\\figure_%.2f_to_%.2f.png', output_dir, 3.6*velstart, 3.6*target);
-    saveas(fig, filename);
+    
+    %% Graph
+    % name_fig = sprintf('[%.2f - %.2f]', 3.6*velstart, 3.6*target);
+    % fig = figure('Name',name_fig);
+    % hold on, grid on
+    % set(gca,'FontName','Times New Roman','FontSize',12)
+    % xlabel('t');
+    % plot(tout, a_x)
+    % plot(tout, v_x)
+    % legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
+    % 
+    % output_dir = "Results";
+    % filename = sprintf('%s\\figure_%.2f_to_%.2f.png', output_dir, 3.6*velstart, 3.6*target);
+    % saveas(fig, filename);
 
 end   
 %% max speed test??
