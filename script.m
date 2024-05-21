@@ -7,6 +7,7 @@ ms_to_kmh = 3.6;
 kmh_to_ms = 1/ms_to_kmh;
 rpm_to_rads = 0.10472;
 rads_to_rpm = 1/rpm_to_rads;
+m_to_km = 10^-3;
 
 %% Parameters initialization
 run('Pacejka for Homework\Load_Tyre_Data.m')
@@ -47,7 +48,8 @@ for i = 1:length(init_speeds)
     fprintf('Aero drag loss of %.2f [Wh].\n', E_aero_drag_Wh(end));
     fprintf('Electric powertrain loss of %.2f [Wh].\n', E_powertrain_loss_Wh(end));
     fprintf('Transmission loss of %.2f [Wh].\n', E_transmission_loss_Wh(end));
-    fprintf('Longitudinal tyre slip loss of %.2f [Wh].\n\n', E_long_slip_loss_Wh(end));
+    fprintf('Longitudinal tyre slip loss of %.2f [Wh].\n', E_long_slip_loss_Wh(end));
+    fprintf('Energy consumption  of %.2f [Wh].\n\n',E_consumption(end));
 
     
     %% Graph
@@ -76,3 +78,30 @@ s = sim("model.slx");
 
 
 fprintf('Max speed: %.2f [Km/h].\n\n', 3.6*max(v_x(:)));
+max_speed = 3.6*max(v_x(:));
+
+%% Cruise control test
+cruise_control = true; %% Maybe use one hot vector for tests
+velstart = 0;
+reference_speeds = [15 30 50 70 90 110 130 max_speed];
+Target = 400;
+Tsim = 48*60*60;
+
+%for i = 1:length(reference_speeds)
+for i = 1:1
+    Vref = reference_speeds(i)*kmh_to_ms;
+    sim("model.slx");
+
+    fprintf('Driven km: %.2f [km] at speed of %.2f [km/h].\n\n', m_to_km*X,reference_speeds(i));
+end
+
+%% Tip-in test
+cruise_control = false;
+velstart = 3;
+tip_in = true;
+Tsim = 20;
+
+sim("model.slx");
+
+
+

@@ -46,4 +46,4 @@ Jns = 0.8;
 
 
 
-save vehicle_parameters.mat
+%save vehicle_parameters.mat
