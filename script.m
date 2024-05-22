@@ -27,6 +27,10 @@ inclination = 0;
 
 Tsim = 200;
 
+cruise_control = false;
+tip_in = false;
+Vref = 400;
+
 %% Longitudinal acceleration test in high-tyre road friction conditions
 velstart = 0;
 %mu_slope = 0;
@@ -68,6 +72,11 @@ for i = 1:length(init_speeds)
 
 end   
 %% max speed test??
+
+cruise_control = false;
+tip_in = false;
+Vref = 400;
+
 velstart = 0;
 %Tsim = 10000;
 %target = 500;
@@ -76,22 +85,24 @@ Tsim = 300;
 target = 300;
 s = sim("model.slx");
 
-
-fprintf('Max speed: %.2f [Km/h].\n\n', 3.6*max(v_x(:)));
-max_speed = 3.6*max(v_x(:));
+top_speed = 3.6*max(v_x(:));
+fprintf('Max speed: %.2f [Km/h].\n\n', top_speed);
 
 %% Cruise control test
 cruise_control = true; %% Maybe use one hot vector for tests
 velstart = 0;
-reference_speeds = [15 30 50 70 90 110 130 max_speed];
+%reference_speeds = [15 30 50 70 90 110 130 max_speed];
+reference_speeds = [15 30 top_speed];
 Target = 400;
 Tsim = 48*60*60;
 
 %for i = 1:length(reference_speeds)
-for i = 1:1
+for i = 2:length(reference_speeds)
     Vref = reference_speeds(i)*kmh_to_ms;
     sim("model.slx");
 
+    % IMPORTANT: check why top_speed is not actually reached in the
+    % simulation
     fprintf('Driven km: %.2f [km] at speed of %.2f [km/h].\n\n', m_to_km*X,reference_speeds(i));
 end
 
