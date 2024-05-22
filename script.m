@@ -21,6 +21,7 @@ g = 9.81; % m/s^2
 rho = 1.204; % air density [kg/m3] at 20°C
 
 inclination = 0;
+tau = torque_time_constant/3;
 
 %s0 = -1;
 %s_slope = 0.2;
@@ -30,6 +31,14 @@ Tsim = 200;
 cruise_control = false;
 tip_in = false;
 Vref = 400;
+%% 
+% cruise_control = true;
+% velstart = 14;
+% mu0 = 0.8;
+% Vref = 4;
+% 
+% sim("model.slx");
+
 
 %% Longitudinal acceleration test in high-tyre road friction conditions
 velstart = 0;
