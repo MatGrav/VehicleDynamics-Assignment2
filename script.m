@@ -80,13 +80,13 @@ for i = 1:length(init_speeds)
     % saveas(fig, filename);
 
 end   
-%% max speed test??
+%% Max speed test
 
 cruise_control = false;
 tip_in = false;
 Vref = 400;
 
-velstart = 0;
+velstart = 20;
 %Tsim = 10000;
 %target = 500;
 

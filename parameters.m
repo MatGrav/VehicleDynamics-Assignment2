@@ -22,11 +22,6 @@ f2 = 6.5 * 10^-6; % s^2 / m^2
 
 L_rel = 0.285; % Tyre relax. length (range between 0.12m and 0.45)
 
-%% Friction brakes
-brakes_generation_deadtime = 0.020; % s
-brakes_friction_rise_time = 0.025; % s
-brakes_torque_distribution = 3.0; % 75:25
-
 %% Weight and aero
 kerb_weight = 1812; % kg
 wheelbase = 2.77; % m
@@ -38,6 +33,15 @@ R_mass_ratio = 1 - F_mass_ratio;
 
 S = 2.36; % m^2 % cross section / frontal area
 Cx = 0.27; % aerodinamic drag coefficient
+
+%% Friction brakes
+brakes_generation_deadtime = 0.020; % s
+brakes_friction_rise_time = 0.025; % s
+brakes_torque_distribution = 3.0; % 75:25
+
+% WE CHOSE THEM
+brake_disc_radius = 0.33; % m
+total_braking_force = kerb_weight*9.81;
 
 %% Assumed parameters (vehicle-wise)
 
