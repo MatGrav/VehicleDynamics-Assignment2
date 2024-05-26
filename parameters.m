@@ -42,6 +42,7 @@ brakes_torque_distribution = 3.0; % 75:25
 % WE CHOSE THEM
 brake_disc_radius = 0.33; % m
 total_braking_force = kerb_weight*9.81;
+braking_efficiency = 0.95;
 
 %% Assumed parameters (vehicle-wise)
 
