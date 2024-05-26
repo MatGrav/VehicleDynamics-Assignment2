@@ -22,15 +22,18 @@ rho = 1.204; % air density [kg/m3] at 20°C
 
 inclination = 0;
 tau = torque_time_constant/3;
+tau_brake = brakes_friction_rise_time/3;
 
 %s0 = -1;
 %s_slope = 0.2;
 
 Tsim = 200;
+BrakePedalPosition = 0;
 
 cruise_control = false;
 tip_in = false;
 Vref = 400;
+motor_on = true;
 %% 
 % cruise_control = true;
 % velstart = 14;
@@ -125,5 +128,27 @@ Tsim = 20;
 
 sim("model.slx");
 
+%% Acceleration-Braking tests with regenerative braking
+
+% To do
+
+%% Emergency braking tests
+
+% Dry tarmac
+emergency_braking = true;
+motor_on = false;
+cruise_control = false;
+tip_in = false;
+
+Tsim = 30;
+mu0 = 1;
+velstart = 100*kmh_to_ms;
+BrakePedalPosition = 0.8; % Problem with values from 0.8 to 1
+
+sim("model.slx");
+fprintf('Stopping distance of %.2f [m] starting from %.2f [km/h].\n\n', X,velstart*ms_to_kmh);
+
+% Wet tarmac
+mu0 = 0.4;
 
 
