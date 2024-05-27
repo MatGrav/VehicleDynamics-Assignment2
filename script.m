@@ -34,6 +34,8 @@ cruise_control = false;
 tip_in = false;
 Vref = 400;
 motor_on = true;
+emergency_braking = false;
+tip_in = false;
 %% 
 % cruise_control = true;
 % velstart = 14;
