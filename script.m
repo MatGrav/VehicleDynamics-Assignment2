@@ -26,6 +26,7 @@ tau_brake = brakes_friction_rise_time/3;
 
 %s0 = -1;
 %s_slope = 0.2;
+initial_SoC = 1;
 
 Tsim = 200;
 BrakePedalPosition = 0;
@@ -36,6 +37,7 @@ Vref = 400;
 motor_on = true;
 emergency_braking = false;
 tip_in = false;
+reg_brake = false;
 %% 
 % cruise_control = true;
 % velstart = 14;
@@ -132,7 +134,21 @@ sim("model.slx");
 
 %% Acceleration-Braking tests with regenerative braking
 
-% To do
+% primissimo test in cui parto da una certa velocità e freno ebbasta
+tip_in = false;
+cruise_control = false;
+reg_brake = true;
+
+velstart = 30*kmh_to_ms;
+initial_SoC = 0.5;
+
+sim("model.slx")
+
+velstart = 130*kmh_to_ms;
+Tsim = 90;
+
+sim("model.slx")
+
 
 %% Emergency braking tests
 
