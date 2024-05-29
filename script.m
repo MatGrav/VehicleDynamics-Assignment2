@@ -30,6 +30,7 @@ curState = Tests.motor_on;
 
 target = 400;
 Vref = 400;
+mu0 = 1;
 
 %% Attempt at effective rolling radius computation
 % cruise_control = true;
@@ -123,7 +124,7 @@ for i = 1:length(reference_speeds)
 end
 
 %% Tip-in test
-curState = combineStates(Tests.motor_on,Tests.tip_in);
+curState = combineStates(Tests.motor_on,Tests.tip_in,Tests.tyre_relaxation_disabled);
 
 velstart = 3;
 Tsim = 9;
@@ -141,33 +142,34 @@ legend('acceleration [m/s^2]', 'Location', 'best')
 %% Acceleration-Braking tests with regenerative braking
 
 % primissimo test in cui parto da una certa velocità e freno e basta
-curState = combineStates(Tests.motor_on,Tests.regen_braking);
-
-velstart = 30*kmh_to_ms;
-initial_SoC = 0.5;
-
-sim("model.slx")
-fprintf('E consumed of %.2f [Wh] \n', E_consumed);
-fprintf('E regenerated of %.2f [Wh] \n\n', E_regenerated);
-
-curState = combineStates(Tests.motor_on,Tests.regen_braking_with_acceleration);
-
-velstart = 20*kmh_to_ms;
+in_speed = kmh_to_ms*[30 20];
 Tsim = 90;
- 
-sim("model.slx")
-fprintf('E consumed of %.2f [Wh] \n', E_consumed);
-fprintf('E regenerated of %.2f [Wh] \n', E_regenerated);
+s = [combineStates(Tests.motor_on,Tests.regen_braking,Tests.tyre_relaxation_disabled) combineStates(Tests.motor_on,Tests.regen_braking_with_acceleration)];
+
+for i = 1:length(in_speed)
+    curState = s(i);
+    velstart = in_speed(i);
+    initial_SoC = 0.5;
+
+    sim("model.slx")
+    fprintf('\n Test of regenerative braking \n');
+    fprintf(' - Energy consumed of %.2f [Wh] \n', E_consumed);
+    fprintf(' - Energy regenerated of %.2f [Wh] \n', E_regenerated);
+    fprintf('Started at %.2f percent, ended test at %.2f percent \n', initial_SoC*100,final_SoC*100);
+end
 
 %%
-curState = combineStates(Tests.motor_on,Tests.regen_braking_with_rep_acceleration);
+curState = combineStates(Tests.motor_on,Tests.regen_braking_with_rep_acceleration,Tests.tyre_relaxation_disabled);
 
 velstart = 0*kmh_to_ms;
 Tsim = 20;
  
 sim("model.slx")
-fprintf('E consumed of %.2f [Wh] \n', E_consumed);
-fprintf('E regenerated of %.2f [Wh] \n', E_regenerated);
+fprintf('\n Test of repeated acceleration and deceleration with regen\n');
+fprintf(' - Energy consumed of %.2f [Wh] \n', E_consumed);
+fprintf(' - Energy regenerated of %.2f [Wh] \n', E_regenerated);
+fprintf('Started at %.2f percent, ended test at %.2f percent \n', initial_SoC*100,final_SoC*100);
+
 
 %% Emergency braking tests
 
@@ -180,23 +182,22 @@ velstart = 100*kmh_to_ms;
 BrakePedalPosition = 0.8; % Problem with values from 0.8 to 1
 
 sim("model.slx");
-fprintf('Stopping distance of %.2f [m] starting from %.2f [km/h].\n\n', X,velstart*ms_to_kmh);
+fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n', X,velstart*ms_to_kmh);
 
 % Wet tarmac
 mu0 = 0.4;
 velstart = 100*kmh_to_ms;
 
 sim("model.slx");
-fprintf('Stopping distance of %.2f [m] starting from %.2f [km/h].\n\n', X,velstart*ms_to_kmh);
+fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n\n', X,velstart*ms_to_kmh);
 
 BrakePedalPosition = 0; % Current workaround to re-do correctly other tests after this
-
+mu0 = 1;
 
 %% User-defined function
 
 function combinedState = combineStates(varargin)
     combinedState = uint32(0);
-    % Iterate over all input states and combine them using bitor
     for i = 1:nargin
         combinedState = bitor(combinedState, varargin{i});
     end

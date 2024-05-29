@@ -8,5 +8,6 @@ classdef (Enumeration) Tests < uint32
         regen_braking (32)
         regen_braking_with_acceleration (64)
         regen_braking_with_rep_acceleration (128)
+        tyre_relaxation_disabled (256)
     end
 end
