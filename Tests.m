@@ -6,5 +6,7 @@ classdef (Enumeration) Tests < uint32
         motor_on (8)
         emergency_braking (16)
         regen_braking (32)
+        regen_braking_with_acceleration (64)
+        regen_braking_with_rep_acceleration (128)
     end
 end

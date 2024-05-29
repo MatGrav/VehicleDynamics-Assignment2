@@ -1,6 +1,6 @@
 clear all; close all; clc
 
-%% Conversion shortcuts
+% Conversion shortcuts
 J_to_Wh = 0.000277778;
 Wh_to_J = 3600;
 ms_to_kmh = 3.6;
@@ -9,7 +9,7 @@ rpm_to_rads = 0.10472;
 rads_to_rpm = 1/rpm_to_rads;
 m_to_km = 10^-3;
 
-%% Parameters initialization
+% Parameters initialization
 run('Pacejka for Homework\Load_Tyre_Data.m')
 run('parameters.m')
 
@@ -87,6 +87,7 @@ end
 
 curState = Tests.motor_on;
 
+mu0 = 1;
 Vref = 400;
 
 velstart = 20;
@@ -110,9 +111,9 @@ reference_speeds = [15 30 50 70 80 110 130 top_speed];
 Target = 600;
 Tsim = 48*60*60;
 
-%for i = 1:length(reference_speeds)
+for i = 1:length(reference_speeds)
 %for i = 5:length(reference_speeds)
-for i = 5:5
+%for i = 5:5
     Vref = reference_speeds(i)*kmh_to_ms;
     sim("model.slx");
 
@@ -146,12 +147,27 @@ velstart = 30*kmh_to_ms;
 initial_SoC = 0.5;
 
 sim("model.slx")
+fprintf('E consumed of %.2f [Wh] \n', E_consumed);
+fprintf('E regenerated of %.2f [Wh] \n\n', E_regenerated);
 
-velstart = 130*kmh_to_ms;
+curState = combineStates(Tests.motor_on,Tests.regen_braking_with_acceleration);
+
+velstart = 20*kmh_to_ms;
 Tsim = 90;
-
+ 
 sim("model.slx")
+fprintf('E consumed of %.2f [Wh] \n', E_consumed);
+fprintf('E regenerated of %.2f [Wh] \n', E_regenerated);
 
+%%
+curState = combineStates(Tests.motor_on,Tests.regen_braking_with_rep_acceleration);
+
+velstart = 0*kmh_to_ms;
+Tsim = 20;
+ 
+sim("model.slx")
+fprintf('E consumed of %.2f [Wh] \n', E_consumed);
+fprintf('E regenerated of %.2f [Wh] \n', E_regenerated);
 
 %% Emergency braking tests
 
