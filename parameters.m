@@ -43,7 +43,6 @@ brakes_torque_distribution = 3.0; % 75:25
 brake_disc_radius = 0.33; % m
 total_braking_force = kerb_weight*9.81;
 braking_efficiency = 0.95;
-
 %% Assumed parameters (vehicle-wise)
 
 % Wheel mass moment of inertia [kg m^2], assumed from similar tires

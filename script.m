@@ -173,23 +173,25 @@ fprintf('Started at %.2f percent, ended test at %.2f percent \n', initial_SoC*10
 
 %% Emergency braking tests
 
-% Dry tarmac
-curState = Tests.emergency_braking;
-
+curState = combineStates(Tests.emergency_braking, Tests.tyre_relaxation_disabled);
 Tsim = 30;
+
+% Dry tarmac
 mu0 = 1;
+w_dot_critic = -70; % rad/s^2 %% ABS
 velstart = 100*kmh_to_ms;
-BrakePedalPosition = 0.8; % Problem with values from 0.8 to 1
+BrakePedalPosition = 1;
 
 sim("model.slx");
 fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n', X,velstart*ms_to_kmh);
 
 % Wet tarmac
-mu0 = 0.4;
-velstart = 100*kmh_to_ms;
-
-sim("model.slx");
-fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n\n', X,velstart*ms_to_kmh);
+% mu0 = 0.4;
+% w_dot_critic = -70; % rad/s^2 %% ABS
+% velstart = 100*kmh_to_ms;
+% 
+% sim("model.slx");
+% fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n\n', X,velstart*ms_to_kmh);
 
 BrakePedalPosition = 0; % Current workaround to re-do correctly other tests after this
 mu0 = 1;
@@ -202,4 +204,3 @@ function combinedState = combineStates(varargin)
         combinedState = bitor(combinedState, varargin{i});
     end
 end
-
