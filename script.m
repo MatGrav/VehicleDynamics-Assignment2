@@ -40,17 +40,35 @@ mu0 = 1;
 % 
 % sim("model.slx");
 
+%% Max speed test
+
+curState = Tests.motor_on;
+
+mu0 = 1;
+Vref = 400;
+
+velstart = 20;
+
+Tsim = 200;
+target = 300;
+sim("model.slx");
+
+top_speed = 3.6*max(v_x(:));
+fprintf('Max speed: %.2f [Km/h].\n\n', top_speed);
+
+
 
 %% Longitudinal acceleration test in high-tyre road friction conditions
 
 curState = Tests.motor_on;
 
 velstart = 0;
-%mu_slope = 0;
 mu0 = 1;
 
+Tsim = 30;
+
 init_speeds = [0 0 40 80 0]; %km/h
-final_speeds = [50 100 70 120 140]; %km/h
+final_speeds = [50 100 70 120 top_speed]; %km/h
 
 for i = 1:length(init_speeds)
 
@@ -60,7 +78,6 @@ for i = 1:length(init_speeds)
     sim("model.slx");
     
     fprintf('Time to reach %.2f from %.2f is %f seconds.\n', 3.6*target, 3.6*velstart, tout(end));
-    %plot(tout(:),3.6*v_x(:))
     fprintf('- Rolling res loss of %.2f [Wh].\n', E_rolling_res_Wh(end));
     fprintf('- Aero drag loss of %.2f [Wh].\n', E_aero_drag_Wh(end));
     fprintf('- Electric powertrain loss of %.2f [Wh].\n', E_powertrain_loss_Wh(end));
@@ -69,39 +86,22 @@ for i = 1:length(init_speeds)
     fprintf('- Energy consumption  of %.2f [Wh].\n\n',E_consumption(end));
 
     
-    %% Graph
-    % name_fig = sprintf('[%.2f - %.2f]', ms_to_kmh*velstart, ms_to_kmh*target);
-    % fig = figure('Name',name_fig);
-    % hold on, grid on
-    % set(gca,'FontName','Times New Roman','FontSize',12)
-    % xlabel('t');
-    % plot(tout, a_x)
-    % plot(tout, v_x)
-    % legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
+    % Graph
+    name_fig = sprintf('[%.2f - %.2f]', ms_to_kmh*velstart, ms_to_kmh*target);
+    fig = figure('Name',name_fig);
+    hold on, grid on
+    set(gca,'FontName','Times New Roman','FontSize',12)
+    xlabel('t');
+    plot(tout, a_x)
+    plot(tout, v_x)
+    legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
 
-    %output_dir = "Results";
-    %filename = sprintf('%s\\figure_%.2f_to_%.2f.png', output_dir, 3.6*velstart, 3.6*target);
-    %saveas(fig, filename);
+    output_dir = "Results";
+    filename = sprintf('%s\\figure_%.2f_to_%.2f.png', output_dir, 3.6*velstart, 3.6*target);
+    saveas(fig, filename);
 
 end   
-%% Max speed test
 
-curState = Tests.motor_on;
-
-mu0 = 1;
-Vref = 400;
-
-velstart = 20;
-%Tsim = 10000;
-%target = 500;
-
-Tsim = 300;
-target = 300;
-sim("model.slx");
-
-top_speed = 3.6*max(v_x(:));
-fprintf('Max speed: %.2f [Km/h].\n\n', top_speed);
-%plot(tout, ms_to_kmh*v_x)
 
 %% Cruise control test
 curState = combineStates(Tests.motor_on,Tests.cruise_control);
