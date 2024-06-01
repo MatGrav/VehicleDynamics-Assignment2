@@ -59,6 +59,7 @@ fprintf('Max speed: %.2f [Km/h].\n\n', top_speed);
 
 
 %% Longitudinal acceleration test in high-tyre road friction conditions
+% Need to do before the Max Speed Test to compute the top_speed variable
 
 curState = Tests.motor_on;
 
@@ -86,20 +87,39 @@ for i = 1:length(init_speeds)
     fprintf('- Energy consumption  of %.2f [Wh].\n\n',E_consumption(end));
 
     
-    % Graph
-    name_fig = sprintf('[%.2f - %.2f]', ms_to_kmh*velstart, ms_to_kmh*target);
-    fig = figure('Name',name_fig);
-    hold on, grid on
-    set(gca,'FontName','Times New Roman','FontSize',12)
-    xlabel('t');
-    plot(tout, a_x)
-    plot(tout, v_x)
-    legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
+    % % Graph about acceleration times
+    % name_fig = sprintf('[%.2f - %.2f] Acceleration Times', ms_to_kmh*velstart, ms_to_kmh*target);
+    % fig = figure('Name',name_fig);
+    % hold on, grid on
+    % set(gca,'FontName','Times New Roman','FontSize',12)
+    % xlabel('t');
+    % plot(tout, a_x, 'LineWidth', 1)
+    % plot(tout, v_x, 'LineWidth', 1)
+    % legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
+    % 
+    % output_dir = "Results";
+    % filename = sprintf('%s\\%.2f_to_%.2f_Acc_Times.png', output_dir, 3.6*velstart, 3.6*target);
+    % saveas(fig, filename);
 
-    output_dir = "Results";
-    filename = sprintf('%s\\figure_%.2f_to_%.2f.png', output_dir, 3.6*velstart, 3.6*target);
-    saveas(fig, filename);
-
+    % Graph about power losses of test case 0-top_speed
+    if i == length(init_speeds)
+        name_fig = sprintf('[%.2f - %.2f] Power Losses', ms_to_kmh*velstart, ms_to_kmh*target);
+        fig = figure('Name',name_fig);
+        hold on, grid on
+        set(gca,'FontName','Times New Roman','FontSize',12)
+        xlabel('[s]');
+        ylabel('[kW]');
+        plot(tout, 0.001*P_aero_drag, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_long_slip_loss, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_powertrain_loss, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_rolling_res, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_transmission_loss, 'LineWidth', 0.7)
+        legend('P aero drag', 'P long slip loss', 'P powertrain loss', 'P rolling res', 'P transmission loss', 'Location', 'best')
+    
+        output_dir = "Results";
+        filename = sprintf('%s\\%.2f_to_%.2f_Power_Losses.png', output_dir, 3.6*velstart, 3.6*target);
+        saveas(fig, filename);
+    end
 end   
 
 
