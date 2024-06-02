@@ -39,7 +39,7 @@ brakes_generation_deadtime = 0.020; % s
 brakes_friction_rise_time = 0.025; % s
 brakes_torque_distribution = 3.0; % 75:25
 
-% WE CHOSE THEM
+% Assumed parameters
 brake_disc_radius = 0.33; % m
 total_braking_force = kerb_weight*9.81;
 braking_efficiency = 0.95;
@@ -49,5 +49,6 @@ braking_efficiency = 0.95;
 Jns = 0.8;
 
 
+%% Export
 
 %save vehicle_parameters.mat

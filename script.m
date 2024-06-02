@@ -100,26 +100,26 @@ for i = 1:length(init_speeds)
     % output_dir = "Results";
     % filename = sprintf('%s\\%.2f_to_%.2f_Acc_Times.png', output_dir, 3.6*velstart, 3.6*target);
     % saveas(fig, filename);
-
-    % Graph about power losses of test case 0-top_speed
-    if i == length(init_speeds)
-        name_fig = sprintf('[%.2f - %.2f] Power Losses', ms_to_kmh*velstart, ms_to_kmh*target);
-        fig = figure('Name',name_fig);
-        hold on, grid on
-        set(gca,'FontName','Times New Roman','FontSize',12)
-        xlabel('[s]');
-        ylabel('[kW]');
-        plot(tout, 0.001*P_aero_drag, 'LineWidth', 0.7)
-        plot(tout, 0.001*P_long_slip_loss, 'LineWidth', 0.7)
-        plot(tout, 0.001*P_powertrain_loss, 'LineWidth', 0.7)
-        plot(tout, 0.001*P_rolling_res, 'LineWidth', 0.7)
-        plot(tout, 0.001*P_transmission_loss, 'LineWidth', 0.7)
-        legend('P aero drag', 'P long slip loss', 'P powertrain loss', 'P rolling res', 'P transmission loss', 'Location', 'best')
-    
-        output_dir = "Results";
-        filename = sprintf('%s\\%.2f_to_%.2f_Power_Losses.png', output_dir, 3.6*velstart, 3.6*target);
-        saveas(fig, filename);
-    end
+    % 
+    % % Graph about power losses of test case 0-top_speed
+    % if i == length(init_speeds)
+    %     name_fig = sprintf('[%.2f - %.2f] Power Losses', ms_to_kmh*velstart, ms_to_kmh*target);
+    %     fig = figure('Name',name_fig);
+    %     hold on, grid on
+    %     set(gca,'FontName','Times New Roman','FontSize',12)
+    %     xlabel('[s]');
+    %     ylabel('[kW]');
+    %     plot(tout, 0.001*P_aero_drag, 'LineWidth', 0.7)
+    %     plot(tout, 0.001*P_long_slip_loss, 'LineWidth', 0.7)
+    %     plot(tout, 0.001*P_powertrain_loss, 'LineWidth', 0.7)
+    %     plot(tout, 0.001*P_rolling_res, 'LineWidth', 0.7)
+    %     plot(tout, 0.001*P_transmission_loss, 'LineWidth', 0.7)
+    %     legend('P aero drag', 'P long slip loss', 'P powertrain loss', 'P rolling res', 'P transmission loss', 'Location', 'best')
+    % 
+    %     output_dir = "Results";
+    %     filename = sprintf('%s\\%.2f_to_%.2f_Power_Losses.png', output_dir, 3.6*velstart, 3.6*target);
+    %     saveas(fig, filename);
+    % end
 end   
 
 
@@ -128,7 +128,7 @@ curState = combineStates(Tests.motor_on,Tests.cruise_control);
 
 velstart = 0*kmh_to_ms;
 % reference_speeds = [15 30 50 70 80 110 130 top_speed];
-reference_speeds = [35 80 120 0.9*top_speed];
+reference_speeds = [30 60 80 120];
 Target = 600;
 Tsim = 48*60*60;
 
@@ -160,11 +160,17 @@ hold on, grid on
 set(gca,'FontName','Times New Roman','FontSize',12)
 xlabel('t');
 plot(tout, a_x)
+axis equal;
 legend('acceleration [m/s^2]', 'Location', 'best')
+
+output_dir = "Results";
+filename = sprintf('%s\\Tipin_tipoff_test.png', output_dir);
+saveas(fig, filename);
+
+
 
 %% Acceleration-Braking tests with regenerative braking
 
-% primissimo test in cui parto da una certa velocità e freno e basta
 in_speed = kmh_to_ms*[30 20];
 Tsim = 90;
 s = [combineStates(Tests.motor_on,Tests.regen_braking,Tests.tyre_relaxation_disabled) combineStates(Tests.motor_on,Tests.regen_braking_with_acceleration)];
@@ -179,9 +185,13 @@ for i = 1:length(in_speed)
     fprintf(' - Energy consumed of %.2f [Wh] \n', E_consumed);
     fprintf(' - Energy regenerated of %.2f [Wh] \n', E_regenerated);
     fprintf('Started at %.2f percent, ended test at %.2f percent \n', initial_SoC*100,final_SoC*100);
+
+    if i == 1
+        fprintf('Stopping distance of %.2f [m].\n', X);
+    end
 end
 
-%%
+%% Acceleration and regen custom sequence
 curState = combineStates(Tests.motor_on,Tests.regen_braking_with_rep_acceleration,Tests.tyre_relaxation_disabled);
 
 velstart = 0*kmh_to_ms;
@@ -193,28 +203,42 @@ fprintf(' - Energy consumed of %.2f [Wh] \n', E_consumed);
 fprintf(' - Energy regenerated of %.2f [Wh] \n', E_regenerated);
 fprintf('Started at %.2f percent, ended test at %.2f percent \n', initial_SoC*100,final_SoC*100);
 
+name_fig = sprintf('SoC');
+fig = figure('Name',name_fig);
+hold on, grid on
+set(gca,'FontName','Times New Roman','FontSize',12)
+xlabel('[s]');
+ylabel('[SoC]');
+plot(tout, 100*SoC_values, 'LineWidth', 0.7)
+legend('State of Charge','Location', 'best')
+
+output_dir = "Results";
+filename = sprintf('%s\\SoC_custom_sequence.png',output_dir);
+saveas(fig, filename);
+
 
 %% Emergency braking tests
 
 curState = combineStates(Tests.emergency_braking, Tests.tyre_relaxation_disabled);
 Tsim = 30;
 
-% Dry tarmac
-mu0 = 1;
+friction_coefficients = [1 1 0.4 0.4];
+init_speeds = kmh_to_ms*[50 100 50 100];
+
 w_dot_critic = -70; % rad/s^2 %% ABS
-velstart = 100*kmh_to_ms;
-BrakePedalPosition = 1;
 
-sim("model.slx");
-fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n', X,velstart*ms_to_kmh);
 
-% Wet tarmac
-% mu0 = 0.4;
-% w_dot_critic = -70; % rad/s^2 %% ABS
-% velstart = 100*kmh_to_ms;
-% 
-% sim("model.slx");
-% fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n\n', X,velstart*ms_to_kmh);
+% Dry tarmac
+for i = 1:length(init_speeds)
+    mu0 = friction_coefficients(i);
+    velstart = init_speeds(i);
+    BrakePedalPosition = 1;
+
+    sim("model.slx");
+    fprintf('\nFriction coefficient of %.2f.', mu0);
+    fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n', X,velstart*ms_to_kmh);
+    
+end    
 
 BrakePedalPosition = 0; % Current workaround to re-do correctly other tests after this
 mu0 = 1;

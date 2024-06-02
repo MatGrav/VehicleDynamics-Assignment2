@@ -9,3 +9,5 @@ slprj/
 
 # Ignora i file che iniziano con tilde (~)
 *~
+
+*.asv
