@@ -13,6 +13,8 @@ torsional_stiffness = 9000; % Nm/rad
 battery_capacity = 58; % kWh
 battery_voltage = 800; % V
 
+damping_coefficient = (50+200)/2;
+
 %% Tires
 
 % Tyre rolling resistance coefficients
