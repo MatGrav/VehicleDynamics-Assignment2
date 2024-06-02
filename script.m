@@ -127,20 +127,23 @@ end
 curState = combineStates(Tests.motor_on,Tests.cruise_control);
 
 velstart = 0*kmh_to_ms;
-reference_speeds = [15 30 50 70 80 110 130 top_speed];
-%reference_speeds = [15 140 top_speed];
+% reference_speeds = [15 30 50 70 80 110 130 top_speed];
+reference_speeds = [35 80 120 0.9*top_speed];
 Target = 600;
 Tsim = 48*60*60;
 
+fprintf('-- Cruise Control Test --\n');
 for i = 1:length(reference_speeds)
-%for i = 5:length(reference_speeds)
-%for i = 5:5
     Vref = reference_speeds(i)*kmh_to_ms;
     sim("model.slx");
-
-    % IMPORTANT: check why top_speed is not actually reached in the
-    % simulation
-    fprintf('Driven km: %.2f [km] at speed of %.2f [km/h].\n\n', m_to_km*X,ms_to_kmh*max(v_x(:)));
+    fprintf('Test Case #%.d \n', i);
+    fprintf('- Driven km: %.2f [km] at speed of %.2f [km/h].\n', m_to_km*X,ms_to_kmh*max(v_x(:)));
+    fprintf('- Rolling res loss of %.2f [kWh].\n', 0.001*E_rolling_res_Wh(end));
+    fprintf('- Aero drag loss of %.2f [kWh].\n', 0.001*E_aero_drag_Wh(end));
+    fprintf('- Electric powertrain loss of %.2f [kWh].\n', 0.001*E_powertrain_loss_Wh(end));
+    fprintf('- Transmission loss of %.2f [kWh].\n', 0.001*E_transmission_loss_Wh(end));
+    fprintf('- Longitudinal tyre slip loss of %.2f [kWh].\n', 0.001*E_long_slip_loss_Wh(end));
+    fprintf('- Energy consumption  of %.2f [kWh].\n\n', 0.001*E_consumption(end));
 end
 
 %% Tip-in test
