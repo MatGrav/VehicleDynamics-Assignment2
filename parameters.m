@@ -49,9 +49,9 @@ braking_efficiency = 0.95;
 Jns = 0.8;
 
 Jm = 0.035; %  Electric motor moment of inertia
-Jtransission = 0.025; % Transmission moment
+Jtransmission = 0.025; % Transmission moment
 
-Jhs = 0.01;
+Jhs = 0.003;
 
 % damping
 c = 125;

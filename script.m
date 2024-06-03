@@ -13,7 +13,9 @@ m_to_km = 10^-3;
 run('Pacejka for Homework\Load_Tyre_Data.m')
 run('parameters.m')
 
-wheel_radius = 0.359; % m
+nominal_wheel_radius = 0.359; % m
+wheel_radius = 0.97 * nominal_wheel_radius;
+
 g = 9.81; % m/s^2 
 
 rho = 1.204; % air density [kg/m3] at 20°C
@@ -31,14 +33,6 @@ curState = Tests.motor_on;
 target = 400;
 Vref = 400;
 mu0 = 1;
-
-%% Attempt at effective rolling radius computation
-% cruise_control = true;
-% velstart = 14;
-% mu0 = 0.8;
-% Vref = 4;
-% 
-% sim("model.slx");
 
 %% Max speed test
 
@@ -87,39 +81,39 @@ for i = 1:length(init_speeds)
     fprintf('- Energy consumption  of %.2f [Wh].\n\n',E_consumption(end));
 
     
-    % % Graph about acceleration times
-    % name_fig = sprintf('[%.2f - %.2f] Acceleration Times', ms_to_kmh*velstart, ms_to_kmh*target);
-    % fig = figure('Name',name_fig);
-    % hold on, grid on
-    % set(gca,'FontName','Times New Roman','FontSize',12)
-    % xlabel('t');
-    % plot(tout, a_x, 'LineWidth', 1)
-    % plot(tout, v_x, 'LineWidth', 1)
-    % legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
-    % 
-    % output_dir = "Results";
-    % filename = sprintf('%s\\%.2f_to_%.2f_Acc_Times.png', output_dir, 3.6*velstart, 3.6*target);
-    % saveas(fig, filename);
-    % 
-    % % Graph about power losses of test case 0-top_speed
-    % if i == length(init_speeds)
-    %     name_fig = sprintf('[%.2f - %.2f] Power Losses', ms_to_kmh*velstart, ms_to_kmh*target);
-    %     fig = figure('Name',name_fig);
-    %     hold on, grid on
-    %     set(gca,'FontName','Times New Roman','FontSize',12)
-    %     xlabel('[s]');
-    %     ylabel('[kW]');
-    %     plot(tout, 0.001*P_aero_drag, 'LineWidth', 0.7)
-    %     plot(tout, 0.001*P_long_slip_loss, 'LineWidth', 0.7)
-    %     plot(tout, 0.001*P_powertrain_loss, 'LineWidth', 0.7)
-    %     plot(tout, 0.001*P_rolling_res, 'LineWidth', 0.7)
-    %     plot(tout, 0.001*P_transmission_loss, 'LineWidth', 0.7)
-    %     legend('P aero drag', 'P long slip loss', 'P powertrain loss', 'P rolling res', 'P transmission loss', 'Location', 'best')
-    % 
-    %     output_dir = "Results";
-    %     filename = sprintf('%s\\%.2f_to_%.2f_Power_Losses.png', output_dir, 3.6*velstart, 3.6*target);
-    %     saveas(fig, filename);
-    % end
+    % Graph about acceleration times
+    name_fig = sprintf('[%.2f - %.2f] Acceleration Times', ms_to_kmh*velstart, ms_to_kmh*target);
+    fig = figure('Name',name_fig);
+    hold on, grid on
+    set(gca,'FontName','Times New Roman','FontSize',12)
+    xlabel('t');
+    plot(tout, a_x, 'LineWidth', 1)
+    plot(tout, v_x, 'LineWidth', 1)
+    legend('acceleration [m/s^2]', 'speed [m/s]', 'Location', 'best')
+
+    output_dir = "Results";
+    filename = sprintf('%s\\%.2f_to_%.2f_Acc_Times.png', output_dir, 3.6*velstart, 3.6*target);
+    saveas(fig, filename);
+
+    % Graph about power losses of test case 0-top_speed
+    if i == length(init_speeds)
+        name_fig = sprintf('[%.2f - %.2f] Power Losses', ms_to_kmh*velstart, ms_to_kmh*target);
+        fig = figure('Name',name_fig);
+        hold on, grid on
+        set(gca,'FontName','Times New Roman','FontSize',12)
+        xlabel('[s]');
+        ylabel('[kW]');
+        plot(tout, 0.001*P_aero_drag, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_long_slip_loss, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_powertrain_loss, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_rolling_res, 'LineWidth', 0.7)
+        plot(tout, 0.001*P_transmission_loss, 'LineWidth', 0.7)
+        legend('P aero drag', 'P long slip loss', 'P powertrain loss', 'P rolling res', 'P transmission loss', 'Location', 'best')
+
+        output_dir = "Results";
+        filename = sprintf('%s\\%.2f_to_%.2f_Power_Losses.png', output_dir, 3.6*velstart, 3.6*target);
+        saveas(fig, filename);
+    end
 end   
 
 
@@ -146,13 +140,14 @@ for i = 1:length(reference_speeds)
     fprintf('- Energy consumption  of %.2f [kWh].\n\n', 0.001*E_consumption(end));
 end
 
-%% Tip-in test
+%% Tip-in and tip-out test
 curState = combineStates(Tests.motor_on,Tests.tip_in,Tests.tyre_relaxation_disabled);
 
-velstart = 10*kmh_to_ms;
-Tsim = 9;
+velstart = 7*kmh_to_ms;
+Tsim = 8;
 
-sim("model.slx");
+%sim("model.slx")
+sim("model_tipin_tipout.slx");
 
 name_fig = sprintf('Tip-in test');
 fig = figure('Name',name_fig);
@@ -160,7 +155,7 @@ hold on, grid on
 set(gca,'FontName','Times New Roman','FontSize',12)
 xlabel('t');
 plot(tout, a_x)
-axis equal;
+
 legend('acceleration [m/s^2]', 'Location', 'best')
 
 output_dir = "Results";
