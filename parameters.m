@@ -9,7 +9,7 @@ torque_time_constant = 0.050; % s
 e_motor_inverter_efficiency = 0.90;
 transmission_efficiency = 0.95;
 
-torsional_stiffness = 9000; % Nm/rad
+torsional_stiffness_half_shafts = 9000; % Nm/rad
 battery_capacity = 58; % kWh
 battery_voltage = 800; % V
 %% Tires
@@ -44,9 +44,17 @@ total_braking_force = kerb_weight*9.81;
 braking_efficiency = 0.95;
 %% Assumed parameters (vehicle-wise)
 
-% Wheel mass moment of inertia [kg m^2], assumed from similar tires
+% Moments of inertia [kg m^2]
+% Wheel mass moment of inertia, assumed from similar tires
 Jns = 0.8;
 
+Jm = 0.035; %  Electric motor moment of inertia
+Jtransission = 0.025; % Transmission moment
+
+Jhs = 0.01;
+
+% damping
+c = 125;
 
 %% Export
 
