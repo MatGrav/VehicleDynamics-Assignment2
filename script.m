@@ -149,7 +149,7 @@ end
 %% Tip-in test
 curState = combineStates(Tests.motor_on,Tests.tip_in,Tests.tyre_relaxation_disabled);
 
-velstart = 3;
+velstart = 10*kmh_to_ms;
 Tsim = 9;
 
 sim("model.slx");
