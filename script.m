@@ -14,7 +14,7 @@ run('Pacejka for Homework\Load_Tyre_Data.m')
 run('parameters.m')
 
 nominal_wheel_radius = 0.359; % m
-wheel_radius = 0.97 * nominal_wheel_radius;
+wheel_radius = nominal_wheel_radius * 0.98;
 
 g = 9.81; % m/s^2 
 
@@ -42,6 +42,7 @@ mu0 = 1;
 Vref = 400;
 
 velstart = 20;
+initial_SoC = 1;
 
 Tsim = 200;
 target = 300;
@@ -61,11 +62,12 @@ velstart = 0;
 mu0 = 1;
 
 Tsim = 30;
+initial_SoC = 1;
 
 init_speeds = [0 0 40 80 0]; %km/h
 final_speeds = [50 100 70 120 top_speed]; %km/h
 
-for i = 1:length(init_speeds)
+for i = 5:length(init_speeds)
 
     velstart = init_speeds(i)/3.6;
     target = final_speeds(i)/3.6;
@@ -146,8 +148,8 @@ curState = combineStates(Tests.motor_on,Tests.tip_in,Tests.tyre_relaxation_disab
 velstart = 7*kmh_to_ms;
 Tsim = 8;
 
-%sim("model.slx")
-sim("model_tipin_tipout.slx");
+sim("model.slx")
+%sim("model_tipin_tipout.slx");
 
 name_fig = sprintf('Tip-in test');
 fig = figure('Name',name_fig);
@@ -189,7 +191,8 @@ end
 %% Acceleration and regen custom sequence
 curState = combineStates(Tests.motor_on,Tests.regen_braking_with_rep_acceleration,Tests.tyre_relaxation_disabled);
 
-velstart = 0*kmh_to_ms;
+velstart = 7*kmh_to_ms;
+initial_SoC = 0.5;
 Tsim = 20;
  
 sim("model.slx")
