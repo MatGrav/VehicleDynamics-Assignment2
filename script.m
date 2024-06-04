@@ -13,15 +13,13 @@ m_to_km = 10^-3;
 run('Pacejka for Homework\Load_Tyre_Data.m')
 run('parameters.m')
 
-nominal_wheel_radius = 0.359; % m
-wheel_radius = nominal_wheel_radius * 0.98;
+wheel_radius = 0.359; % m
 
 g = 9.81; % m/s^2 
 
 rho = 1.204; % air density [kg/m3] at 20°C
 
 inclination = 0;
-tau = torque_time_constant/3;
 tau_brake = brakes_friction_rise_time/3;
 
 initial_SoC = 1;
@@ -46,6 +44,7 @@ initial_SoC = 1;
 
 Tsim = 200;
 target = 300;
+fprintf('-- Max Speed Test --\n');
 sim("model.slx");
 
 top_speed = 3.6*max(v_x(:));
@@ -57,17 +56,17 @@ fprintf('Max speed: %.2f [Km/h].\n\n', top_speed);
 % Need to do before the Max Speed Test to compute the top_speed variable
 
 curState = Tests.motor_on;
-
 velstart = 0;
 mu0 = 1;
 
-Tsim = 30;
+Tsim = 100;
 initial_SoC = 1;
 
 init_speeds = [0 0 40 80 0]; %km/h
 final_speeds = [50 100 70 120 top_speed]; %km/h
 
-for i = 5:length(init_speeds)
+fprintf('-- Longitudinal Acceleration Test --\n');
+for i = 1:length(init_speeds)
 
     velstart = init_speeds(i)/3.6;
     target = final_speeds(i)/3.6;
@@ -148,8 +147,8 @@ curState = combineStates(Tests.motor_on,Tests.tip_in,Tests.tyre_relaxation_disab
 velstart = 7*kmh_to_ms;
 Tsim = 8;
 
-sim("model.slx")
-%sim("model_tipin_tipout.slx");
+% sim("model.slx")
+sim("model_tipin_tipout.slx");
 
 name_fig = sprintf('Tip-in test');
 fig = figure('Name',name_fig);
@@ -178,16 +177,18 @@ for i = 1:length(in_speed)
     initial_SoC = 0.5;
 
     sim("model.slx")
-    fprintf('\n Test of regenerative braking \n');
+    fprintf('-- Acceleration-Braking tests with regenerative braking --\n');
     fprintf(' - Energy consumed of %.2f [Wh] \n', E_consumed);
     fprintf(' - Energy regenerated of %.2f [Wh] \n', E_regenerated);
-    fprintf('Started at %.2f percent, ended test at %.2f percent \n', initial_SoC*100,final_SoC*100);
+    fprintf('Started at %.2f percent, ended test at %.2f percent \n\n', initial_SoC*100,final_SoC*100);
 
     if i == 1
         fprintf('Stopping distance of %.2f [m].\n', X);
     end
 end
 
+% Reset SoC for possible future different tests
+initial_SoC = 1;
 %% Acceleration and regen custom sequence
 curState = combineStates(Tests.motor_on,Tests.regen_braking_with_rep_acceleration,Tests.tyre_relaxation_disabled);
 
@@ -196,10 +197,10 @@ initial_SoC = 0.5;
 Tsim = 20;
  
 sim("model.slx")
-fprintf('\n Test of repeated acceleration and deceleration with regen\n');
+fprintf('-- Repeated Acceleration-Braking tests with regenerative braking --\n');
 fprintf(' - Energy consumed of %.2f [Wh] \n', E_consumed);
 fprintf(' - Energy regenerated of %.2f [Wh] \n', E_regenerated);
-fprintf('Started at %.2f percent, ended test at %.2f percent \n', initial_SoC*100,final_SoC*100);
+fprintf('Started at %.2f percent, ended test at %.2f percent \n\n', initial_SoC*100,final_SoC*100);
 
 name_fig = sprintf('SoC');
 fig = figure('Name',name_fig);
@@ -214,7 +215,8 @@ output_dir = "Results";
 filename = sprintf('%s\\SoC_custom_sequence.png',output_dir);
 saveas(fig, filename);
 
-
+% Reset SoC for possible future different tests
+initial_SoC = 1;
 %% Emergency braking tests
 
 curState = combineStates(Tests.emergency_braking, Tests.tyre_relaxation_disabled);
@@ -233,6 +235,8 @@ for i = 1:length(init_speeds)
     BrakePedalPosition = 1;
 
     sim("model.slx");
+
+    fprintf('-- Emergency Braking Test --\n');
     fprintf('\nFriction coefficient of %.2f.', mu0);
     fprintf('\nStopping distance of %.2f [m] starting from %.2f [km/h].\n', X,velstart*ms_to_kmh);
     
