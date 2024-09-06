@@ -4,14 +4,18 @@ Homework made by:
 s319634 Matteo Gravagnone,
 s318083 Danilo Guglielmi
 
-## Report scheme
+## Introduction
 
-Required: 
-Concise project report
-- Model layout (short description + manoeuvre parameters)
-- Outputs (some figures + comments)
-- Analysis of main results (e.g., regenerative braking capability, autonomy, etc...)
-- Maximum length: 5 pages
+We are going to analyse the 
+implementation and simulation of a rear-wheel-drive 
+electric passenger car in MATLAB and Simulink. 
+
+The target of the work is to develop a model of a vehicle 
+motion and carry out simulations of different cases, 
+related to the main elements involved in the 
+longitudinal dynamics (acceleration, friction braking, 
+energy consumption, regenerative braking)
+
 
 #### Model layout (short description + manoeuvre parameters):
 - model of longitudinal motion
@@ -28,8 +32,7 @@ Concise project report
 - Longitudinal dynamics based on force balance equation
     - Aerodynamic, gravity (due to possible inclination, always set to 0 in the coursework) and rolling forces opposed to the sum of longitudinal tyre forces
 - Subsystem takes multiple power losses and integrates them to obtain the energy loss due to rolling resistance, aerodynamic drag and so on
-- Vertical load distribution with load transfer
-    - Also models load transfer due to aero drag and non-zero acceleration
+- Vertical load distribution with load transfer, with contributions due to aero drag and non-zero acceleration.
     - Does not take into account the rolling resistance parameter Dx which shifts the application point of Fzr and Fzf as it was considered negligible in prior simulations.
     - No downforce contributions
 - Electric machine which outputs torque and power consumption
@@ -47,28 +50,3 @@ Concise project report
 - Efficiencies
     - Trasmission efficiency factors and gear ratio for "motor" torque at wheel level
     - Inverter efficiency is correctly considered in positive and negative power contributions (not possible to get more kW at battery than the kW regenerated at wheel)
-
-
-
-#### Outputs (some figures + comments)
-
-
-## Domande da porre
-
-1. Come modellare la torsional stiffness degli half shafts -> anche per tip-in e tip-off test
-
-
-
-2. Motor torque generation time constant
-    1. Pure time delay - blocco Simulink time delay.    
-    2. Motor torque time constant -> modellare il motore con una funzione di trasferimento del primo ordine con costante di tempo pari alla constant
-
-3. Come deriviamo la potenza che può essere rigenerata a partire dalle ruote? (P = T*omega da quali ruote? Quelle motrici) [https://www.engineeringtoolbox.com/work-torque-d_1377.html]
-    - 0.15-0.2 g di decelerazione si può frenare con la sola frenata rigenerativa
-    - Per decelerazioni superiori, attenzione alla distribuzione della forza frenante tra front e rear (o solo frenata dissipativa o combinazione freni di servizio e rigener.)
-
-4. Power losses nei test di accelerazione: in termini di energia o andamento nel tempo della potenza?
-    - Va bene mostrare l'energia dissipata durante i test, volendo si può provare a mettere su uno stesso grafico l'andamento della potenza
-
-5. Effective radius come va considerato? Problema forma 0/0 slip
-    - Formula si applica per pure rolling conditions (-> utilizzare come radius il valore ottenuto precedentemente dall'effective roll radius o direttamente 0.97*wheel_radius )
